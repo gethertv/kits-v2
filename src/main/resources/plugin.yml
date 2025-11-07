@@ -1,0 +1,9 @@
+name: kits
+version: '2.0'
+main: dev.gether.kits.KitsPlugin
+api-version: '1.19'
+libraries:
+  - com.google.code.gson:gson:2.13.2
+  - org.mongodb:mongodb-driver-sync:4.11.1
+  - mysql:mysql-connector-java:8.0.33
+  - org.xerial:sqlite-jdbc:3.43.0.0
