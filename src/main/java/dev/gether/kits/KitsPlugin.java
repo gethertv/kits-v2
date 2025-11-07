@@ -1,6 +1,7 @@
 package dev.gether.kits;
 
 import dev.gether.getutils.inventory.GetInventory;
+import dev.gether.kits.bstats.Metrics;
 import dev.gether.kits.command.KitAdminCommand;
 import dev.gether.kits.command.KitCommand;
 import dev.gether.kits.command.arg.KitArg;
@@ -62,6 +63,9 @@ public final class KitsPlugin extends JavaPlugin {
 
         // command
         registerCommand();
+
+        // register bstats
+        new Metrics(this, 27894);
 
     }
 

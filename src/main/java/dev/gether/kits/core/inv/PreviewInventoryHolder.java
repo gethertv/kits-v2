@@ -8,8 +8,6 @@ import dev.gether.getutils.utils.TimeUtil;
 import dev.gether.kits.KitsPlugin;
 import dev.gether.kits.core.Kit;
 import dev.gether.kits.user.User;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class PreviewInventoryHolder extends AbstractInventoryHolder<KitsPlugin> {
 
@@ -67,22 +64,22 @@ public class PreviewInventoryHolder extends AbstractInventoryHolder<KitsPlugin> 
                 ItemStack itemStack = plugin.getFileManager().getConfig().getCooldownItem().getItemStack();
                 ItemMeta itemMeta = itemStack.getItemMeta();
 
-                List<Component> lore = itemMeta.lore();
+                if(itemMeta == null)
+                    return;
+
+                List<String> lore = itemMeta.getLore();
                 if (lore == null) {
                     lore = new ArrayList<>();
                 }
 
-                List<Component> updatedLore = new ArrayList<>();
-                for (Component line : lore) {
-                    String legacyText = LegacyComponentSerializer.legacySection().serialize(line);
-                    String replaced = legacyText
+                List<String> updatedLore = new ArrayList<>();
+                for (String line : lore) {
+                    String replaced = line
                             .replace("{time}", TimeUtil.formatTimeShort(remainingCooldown / 1000));
-                    String colored = ColorFixer.addColors(replaced);
-                    Component component = LegacyComponentSerializer.legacySection().deserialize(colored);
-                    updatedLore.add(component);
+                    updatedLore.add(ColorFixer.addColors(replaced));
                 }
 
-                itemMeta.lore(updatedLore);
+                itemMeta.setLore(updatedLore);
                 itemStack.setItemMeta(itemMeta);
 
                 setItem(kit.getSlotReceivedKit(), itemStack, event -> {

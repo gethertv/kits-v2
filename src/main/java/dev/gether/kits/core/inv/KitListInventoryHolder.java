@@ -4,12 +4,9 @@ package dev.gether.kits.core.inv;
 import dev.gether.getutils.inventory.AbstractInventoryHolder;
 import dev.gether.getutils.inventory.InventoryConfig;
 import dev.gether.getutils.utils.ColorFixer;
-import dev.gether.getutils.utils.MessageUtil;
 import dev.gether.getutils.utils.TimeUtil;
 import dev.gether.kits.KitsPlugin;
 import dev.gether.kits.core.Kit;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,23 +39,23 @@ public class KitListInventoryHolder extends AbstractInventoryHolder<KitsPlugin> 
                 ItemStack itemStack = remainingCooldown > 0 ? kit.getIconCooldown().getItem().getItemStack() : kit.getIcon().getItem().getItemStack();
                 ItemMeta itemMeta = itemStack.getItemMeta();
 
-                List<Component> lore = itemMeta.lore();
-                if(lore == null) {
+                if (itemMeta == null)
+                    return;
+
+                List<String> lore = itemMeta.getLore();
+                if (lore == null) {
                     lore = new ArrayList<>();
                 }
 
-                List<Component> updatedLore = new ArrayList<>();
-                for (Component line : lore) {
-                    String legacyText = LegacyComponentSerializer.legacySection().serialize(line);
-                    String replaced = legacyText
+                List<String> updatedLore = new ArrayList<>();
+                for (String line : lore) {
+                    String replaced = line
                             .replace("{status}", getStatus(kit, remainingCooldown))
                             .replace("{time}", TimeUtil.formatTimeShort(kit.getCooldown()));
-                    String colored = ColorFixer.addColors(replaced);
-                    Component component = LegacyComponentSerializer.legacySection().deserialize(colored);
-                    updatedLore.add(component);
+                    updatedLore.add(ColorFixer.addColors(replaced));
                 }
 
-                itemMeta.lore(updatedLore);
+                itemMeta.setLore(updatedLore);
                 itemStack.setItemMeta(itemMeta);
 
                 setItem(kit.getIcon().getSlot(), itemStack, event -> {
@@ -74,10 +71,10 @@ public class KitListInventoryHolder extends AbstractInventoryHolder<KitsPlugin> 
     }
 
     private String getStatus(Kit kit, long remainingCooldown) {
-        if(remainingCooldown > 0) {
-          return TimeUtil.formatTimeShort(remainingCooldown/1000);
+        if (remainingCooldown > 0) {
+            return TimeUtil.formatTimeShort(remainingCooldown / 1000);
         }
-        return player.hasPermission(kit.getPermission()) ? plugin.getFileManager().getConfig().getHasAccessStatus(): plugin.getFileManager().getConfig().getNoAccessStatus();
+        return player.hasPermission(kit.getPermission()) ? plugin.getFileManager().getConfig().getHasAccessStatus() : plugin.getFileManager().getConfig().getNoAccessStatus();
     }
 
 }
