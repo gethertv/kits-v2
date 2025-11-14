@@ -2,12 +2,15 @@ package dev.gether.kits.user;
 
 import dev.gether.database.iinterface.DatabaseEntity;
 import dev.gether.getutils.annotation.YamlIgnore;
+import dev.gether.getutils.utils.ColorFixer;
 import dev.gether.getutils.utils.MessageUtil;
 import dev.gether.getutils.utils.PlayerUtil;
 import dev.gether.kits.KitsPlugin;
 import dev.gether.kits.core.Kit;
 import lombok.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -57,10 +60,38 @@ public class User implements DatabaseEntity {
             return;
         }
         claimKit(kit.getKey());
-        kit.getItems().values().forEach(itemStack -> {
-            PlayerUtil.addItems(player, false, itemStack.clone());
-        });
-        player.closeInventory();
+        if(KitsPlugin.getInstance().getFileManager().getConfig().isTakeItemFromInv()) {
+            Inventory inventory = Bukkit.createInventory(player, getSizeInv(kit.getItems().size()), ColorFixer.addColors(kit.getInventoryConfig().getTitle()));
+            kit.getItems().values().forEach(itemStack -> {
+                inventory.addItem(itemStack.clone());
+            });
+            player.openInventory(inventory);
+        } else {
+            kit.getItems().values().forEach(itemStack -> {
+                PlayerUtil.addItems(player, false, itemStack.clone());
+            });
+            player.closeInventory();
+        }
+
+    }
+
+    private int getSizeInv(int size) {
+        if(size < 9) {
+            return 9;
+        }
+        if(size < 18) {
+            return 18;
+        }
+        if(size < 27) {
+            return 27;
+        }
+        if(size < 36) {
+            return 36;
+        }
+        if(size < 45) {
+            return 45;
+        }
+        return 54;
     }
 
     public void reset() {

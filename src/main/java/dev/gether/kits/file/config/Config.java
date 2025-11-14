@@ -1,6 +1,7 @@
 package dev.gether.kits.file.config;
 
 import dev.gether.getutils.GetConfig;
+import dev.gether.getutils.annotation.Comment;
 import dev.gether.getutils.inventory.InventoryConfig;
 import dev.gether.getutils.inventory.item.DynamicItem;
 import dev.gether.getutils.inventory.item.StaticItem;
@@ -23,6 +24,9 @@ public class Config extends GetConfig {
     private String noPermission = "&cNie masz uprawnień do tego zestawu!";
     private String cooldownMessage = "&cMusisz poczekać jeszcze: &f{time}";
     private String kitDisabled = "&cAktualnie zestaw jest wyłączony!";
+
+    @Comment("jeśli chcesz, aby pojawiało się inventory gdzie możesz wybrać jakie itemy chcesz odebrać")
+    private boolean takeItemFromInv = false;
 
     private StaticItem closeInv = StaticItem.builder()
             .enabled(true)

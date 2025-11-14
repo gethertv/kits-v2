@@ -73,7 +73,7 @@ public class KitAdminCommand {
     }
     @Execute(name = "disable *")
     public void disableAll(@Context CommandSender sender) {
-        plugin.getKitManager().enableAll();
+        plugin.getKitManager().disableAll();
         MessageUtil.sendMessage(sender, "&cDisabled all kits.");
     }
     @Execute(name = "enable")
@@ -83,7 +83,7 @@ public class KitAdminCommand {
     }
     @Execute(name = "disable")
     public void disable(@Context CommandSender sender, @Arg("kit-name") Kit kit) {
-        plugin.getKitManager().enable(kit);
+        plugin.getKitManager().disable(kit);
         MessageUtil.sendMessage(sender, "&cDisabled the kit.");
     }
 

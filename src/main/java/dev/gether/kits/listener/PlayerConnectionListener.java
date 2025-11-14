@@ -68,7 +68,6 @@ public class PlayerConnectionListener implements Listener {
         cleanupTasks.put(uuid, cleanupTask);
     }
 
-
     public void cleanup() {
         for (BukkitTask task : cleanupTasks.values()) {
             task.cancel();
